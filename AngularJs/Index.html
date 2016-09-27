@@ -8,17 +8,83 @@
       <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script> 
       <script type="text/javascript">    
-         angular.module('MyApp', ['ngMaterial', 'ngMdIcons']);
+         angular.module('MyApp', ['ngMaterial', 'ngMdIcons'])
+         .controller('AppCtrl',function ($scope, $timeout, $mdSidenav, $log) {
+              $scope.toogleLeft = buildDelayedToggler('left');
+              $scope.toogleRight = buildToggler('right');
+              $scope.isOpenRight = function(){
+                return $mdSidenav('right').isOpen();
+              };
+
+              /**
+               * Supplies a function that will continue to operate until the
+               * time is up.
+               */
+              function debounce(func, wait, context) {
+                var timer;
+
+                return function debounced() {
+                  var context = $scope,
+                      args = Array.prototype.slice.call(arguments);
+                  $timeout.cancel(timer);
+                  timer = $timeout(function() {
+                    timer = undefined;
+                    func.apply(context, args);
+                  }, wait || 10);
+                };
+              }
+
+              /**
+               * Build handler to open/close a SideNav; when animation finishes
+               * report completion in console
+               */
+              function buildDelayedToggler(navID) {
+                return debounce(function(){
+                  //Component lookup should always be available since we are not using 'ng-if'
+                  $mdSidenav(navID).toggle()
+                  .then(function () {
+                    $log.debug("toggle "+navID+" is done.");
+                  });
+                },200);
+              }
+
+              function buildToggler(navID) {
+                // disable till we make section for RIGHT
+                /**
+                $mdSidenav(navID).toggle().then(function () {
+                    $log.debug("toggle "+navID+" is done.");
+                  });
+                **/
+              }
+         }
+         ).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+            $scope.close = function () {
+              // Component lookup should always be available since we are not using `ng-if`
+              $mdSidenav('left').close()
+                .then(function () {
+                  $log.debug("close LEFT is done");
+                });
+
+            };
+          })
+          .controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+            $scope.close = function () {
+              // Component lookup should always be available since we are not using `ng-if`
+              $mdSidenav('right').close()
+                .then(function () {
+                  $log.debug("close RIGHT is done");
+                });
+            };
+          });
       </script>
    </head>
-   <body ng-app="MyApp">
+   <body>
       <!-- 
         md-content :  an Angular Directive, is a container element and is used for "scrollable content"
                       CSS overflow property to auto so that content can properly scroll
         md-scroll-y : Scroll in Y direction makes it available
       -->
       <md-content flex md-scroll-y>
-
         <!--
           ui-view :     https://github.com/angular-ui/ui-router/wiki/Quick-Reference#ui-view
           layout-fill : https://material.angularjs.org/latest/layout/options
@@ -29,8 +95,73 @@
                       activates when (600px <= width < 960px)
           -->
           <div class="inset" hide-sm></div>
-
+          <!--
+            ng-switch : The ngSwitch directive is used to conditionally swap DOM structure on your template based on a scope expression.
+                        Elements within ngSwitch but without ngSwitchWhen or ngSwitchDefault directives will be preserved at the location as specified in the template.
+                        https://docs.angularjs.org/api/ng/directive/ngSwitch
+          -->
+          <ng-switch on="data.selectedIndex" class="tabpanel-container">
+          </ng-switch>
         </ui-view> 
+        <!--
+          ng-clock  : https://docs.angularjs.org/api/ng/directive/ngCloak
+                      displayed by the browser in its raw (uncompiled) form while your application is loading. Use this directive to avoid the undesirable flicker effect caused by the html template display
+        -->
+        <div ng-controller="AppCtrl" layout="column" style="height: 500px" ng-cloak class="sidenavdemo" ng-app="MyApp">
+
+            <section layout="row" flex>
+              <!--
+                md-component-id :   componentId to use with $mdSidenav service
+                md-is-locked-open : When this expression evaluates to true, the sidenav 'locks open': it falls into the content's flow 
+                                    instead of appearing over it. This overrides the "md-is-open" attribute.
+                                    md-is-locked-open="$mdMedia('gt-md')"
+                md-whiteframe :     This attribute is used for shadow
+              -->
+              <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-open="true" md-whiteframe="4">
+
+                <md-toolbar class = "md-theme-indigo">
+                  <h1 class="md-toolbar-tools">Sidenav Left</h1>
+                </md-toolbar>
+
+                <md-content layout-padding ng-controller="LeftCtrl">
+                    <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                      Close
+                    </md-button>
+                    <p hide="" show-gt-md="">
+                      This sidenav is locked open on your device. To go back to the default behavior,
+                      narrow your display.
+                    </p>
+                </md-content>
+              </md-sidenav>
+
+              <md-content flex="" layout-padding="">
+                <div layout="column" layout-align="top center">
+                  <p>
+                  The left sidenav will 'lock open' on a medium (=960px wide) device.
+                  </p>
+                  <p>
+                  The right sidenav will focus on a specific child element.
+                  </p>
+
+                  <div>
+                    <md-button ng-click="toggleLeft()" class="md-primary" hide-gt-md="">
+                    Toggle left
+                    </md-button>
+                  </div>
+
+                  <div>
+                    <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" class="md-primary">
+                    Toggle right
+                    </md-button>
+                  </div>
+                </div>
+                <div flex=""></div>
+              </md-content>
+
+            </section>
+      
+        </div>
+
       </md-content>
    </body>
 </html>
