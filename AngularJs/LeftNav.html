@@ -1,0 +1,127 @@
+<html lang="en" ng-app="MyApp">
+   <head>
+      <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script> 
+      <link rel="stylesheet" type="text/css" href="MyApp.css">
+      <script type="text/javascript">    
+         angular.module('MyApp', ['ngMaterial', 'ngMdIcons'])
+         .controller('AppCtrl',function ($scope, $timeout, $mdSidenav, $log, $mdComponentRegistry) {
+              $scope.toogleLeft = function(menuId) {
+                $log.debug('toggle clicked.');
+                $mdSidenav(menuId).toggle();
+              };
+
+              $scope.playlists = [
+                {
+                  link : '',
+                  title: 'xEnglish',
+                  icon: 'music_note'
+                },
+                {
+                  link : '',
+                  title: '2016 Hindi',
+                  icon: 'music_note'
+                },
+                {
+                  link : '',
+                  title: '2014 Hindi',
+                  icon: 'music_note'
+                },
+                {
+                  link : '',
+                  title: 'BGM',
+                  icon: 'music_note'
+                },
+                {
+                  link : '',
+                  title: 'Song',
+                  icon: 'music_note'
+                },
+                {
+                  link : '',
+                  title: 'Old Songs',
+                  icon: 'music_note'
+                }
+              ];
+         }
+         ).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+            $scope.close = function () {
+              // Component lookup should always be available since we are not using `ng-if`
+              $mdSidenav('left').close()
+                .then(function () {
+                  $log.debug("close LEFT is done");
+                });
+
+            };
+          });
+      </script>
+   </head>
+   <body layout="row" ng-controller="AppCtrl">
+   <!--
+      md-component-id :   componentId to use with $mdSidenav service
+      md-is-locked-open : When this expression evaluates to true, the sidenav 'locks open': it falls into the content's flow 
+                          instead of appearing over it. This overrides the "md-is-open" attribute.
+                          md-is-locked-open="$mdMedia('gt-md')"
+      md-whiteframe :     This attribute is used for shadow
+    -->
+    <md-sidenav layout="column" class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
+
+      <md-toolbar class = "md-hue-2">
+        <span flex> </span>
+        <h1 class="md-toolbar-tools">JBaba</h1>
+      </md-toolbar>
+
+          <md-item-content layout="row" layout-align="start center">
+            <div class="inset">
+              <ng-md-icon icon="my_library_music"></ng-md-icon> 
+            </div>
+            <div class="inset">Playlists</div>
+          </md-item-content>
+          
+          <md-divider></md-divider>
+          
+          <!--
+            List of playlists
+          -->
+          <md-list flex>
+            <md-item ng-repeat="item in playlists">
+            <a>
+              <md-item-content md-ink-ripple layout="row" layout-align="start center">
+                <div class="inset">
+                  <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                </div>
+                <div class="inset">{{item.title}}
+                </div>
+              </md-item-content>
+            </a>
+            </md-item>
+          </md-list>
+
+    </md-sidenav>
+    <div layout="column" class="relative" layout-fill role="main">
+        <md-content flex="" layout-padding="">
+          <div layout="column" layout-align="top center">
+            <p>
+            The left sidenav will 'lock open' on a medium (=960px wide) device.
+            </p>
+            <p>
+            The right sidenav will focus on a specific child element.
+            </p>
+
+            <div>
+              <md-button ng-click="toogleLeft('left')" class="md-primary">
+              Toggle left
+              </md-button>
+            </div>
+
+          </div>
+          <div flex=""></div>
+        </md-content>
+    </div>
+   </body>
+</html>
