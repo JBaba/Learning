@@ -9,53 +9,12 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script> 
       <script type="text/javascript">    
          angular.module('MyApp', ['ngMaterial', 'ngMdIcons'])
-         .controller('AppCtrl',function ($scope, $timeout, $mdSidenav, $log) {
-              $scope.toogleLeft = buildDelayedToggler('left');
-              $scope.toogleRight = buildToggler('right');
-              $scope.isOpenRight = function(){
-                return $mdSidenav('right').isOpen();
+         .controller('AppCtrl',function ($scope, $timeout, $mdSidenav, $log, $mdComponentRegistry) {
+              $scope.toogleLeft = function(menuId) {
+                $log.debug('toggle clicked.');
+                $mdSidenav(menuId).toggle();
               };
 
-              /**
-               * Supplies a function that will continue to operate until the
-               * time is up.
-               */
-              function debounce(func, wait, context) {
-                var timer;
-
-                return function debounced() {
-                  var context = $scope,
-                      args = Array.prototype.slice.call(arguments);
-                  $timeout.cancel(timer);
-                  timer = $timeout(function() {
-                    timer = undefined;
-                    func.apply(context, args);
-                  }, wait || 10);
-                };
-              }
-
-              /**
-               * Build handler to open/close a SideNav; when animation finishes
-               * report completion in console
-               */
-              function buildDelayedToggler(navID) {
-                return debounce(function(){
-                  //Component lookup should always be available since we are not using 'ng-if'
-                  $mdSidenav(navID).toggle()
-                  .then(function () {
-                    $log.debug("toggle "+navID+" is done.");
-                  });
-                },200);
-              }
-
-              function buildToggler(navID) {
-                // disable till we make section for RIGHT
-                /**
-                $mdSidenav(navID).toggle().then(function () {
-                    $log.debug("toggle "+navID+" is done.");
-                  });
-                **/
-              }
          }
          ).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
             $scope.close = function () {
@@ -65,15 +24,6 @@
                   $log.debug("close LEFT is done");
                 });
 
-            };
-          })
-          .controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
-            $scope.close = function () {
-              // Component lookup should always be available since we are not using `ng-if`
-              $mdSidenav('right').close()
-                .then(function () {
-                  $log.debug("close RIGHT is done");
-                });
             };
           });
       </script>
@@ -117,14 +67,14 @@
                                     md-is-locked-open="$mdMedia('gt-md')"
                 md-whiteframe :     This attribute is used for shadow
               -->
-              <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-open="true" md-whiteframe="4">
+              <md-sidenav class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
 
                 <md-toolbar class = "md-theme-indigo">
                   <h1 class="md-toolbar-tools">Sidenav Left</h1>
                 </md-toolbar>
 
-                <md-content layout-padding ng-controller="LeftCtrl">
-                    <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                <md-content layout-padding="" ng-controller="LeftCtrl">
+                    <md-button ng-click="close()" class="md-primary">
                       Close
                     </md-button>
                     <p hide="" show-gt-md="">
@@ -144,16 +94,11 @@
                   </p>
 
                   <div>
-                    <md-button ng-click="toggleLeft()" class="md-primary" hide-gt-md="">
+                    <md-button ng-click="toogleLeft('left')" class="md-primary">
                     Toggle left
                     </md-button>
                   </div>
 
-                  <div>
-                    <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" class="md-primary">
-                    Toggle right
-                    </md-button>
-                  </div>
                 </div>
                 <div flex=""></div>
               </md-content>
