@@ -48,6 +48,39 @@
                   icon: 'music_note'
                 }
               ];
+
+              $scope.songs = [
+              {
+                name: 'Brunch this weekend?',
+                artist: 'Ali Conners',
+                time: '3.08',
+                notes: " I'll be in your neighborhood doing errands"
+              },
+              {
+                name: 'Summer BBQ',
+                artist: 'to Alex, Scott, Jennifer',
+                time: '3.08',
+                notes: "Wish I could come out but I'm out of town this weekend"
+              },
+              {
+                name: 'Oui Oui',
+                artist: 'Sandra Adams',
+                time: '3.08',
+                notes: "Do you have Paris recommendations? Have you ever been?"
+              },
+              {
+                name: 'Birthday Gift',
+                artist: 'Trevor Hansen',
+                time: '3.08',
+                notes: "Have any ideas of what we should get Heidi for her birthday?"
+              },
+              {
+                name: 'Recipe to try',
+                artist: 'Brian Holt',
+                time: '3.08',
+                notes: "We should eat this: Grapefruit, Squash, Corn, and Tomatillo tacos"
+              },
+            ];
          }
          ).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
             $scope.close = function () {
@@ -150,7 +183,19 @@
               <div role="tabpanel" id="tab1-content" aria-labelledby="tab1" layout="row" layout-align="center center">
                 <md-card flex-gt-sm="100" flex-gt-md="80">
                   <md-card-content>
-                    <h2>Activity</h2>
+                    <h2>List of Songs in PlayList</h2>
+                    <md-list flex>
+                      <md-subheader class="md-no-sticky">3 line item (with hover)</md-subheader>
+                      <md-list-item class="md-3-line" ng-repeat="item in songs" ng-click="null">
+                        <ng-md-icon size="36" layout-padding icon="play_circle_fill" ></ng-md-icon>
+                        <div class="md-list-item-text" layout="column">
+                          <h3 class="md-title">{{ item.name }}</h3>
+                          <h4>{{ item.artist }}</h4>
+                          <p class="md-secondary">{{ item.time }}</p>
+                        </div>
+                      </md-list-item>
+                      <md-divider ></md-divider>
+                    </md-list>
                   </md-card-content>
                 </md-card>
               </div>  
