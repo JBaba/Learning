@@ -183,14 +183,14 @@
               <div role="tabpanel" id="tab1-content" aria-labelledby="tab1" layout="row" layout-align="center center">
                 <md-card flex-gt-sm="100" flex-gt-md="80">
                   <md-card-content>
-                    <h2>List of Songs in PlayList</h2>
+                    <!--<h6>List of Songs in PlayList</h6>-->
                     <md-list flex>
-                      <md-subheader class="md-no-sticky">3 line item (with hover)</md-subheader>
+                      <md-subheader class="md-no-sticky">List of Songs in PlayList</md-subheader>
                       <md-list-item class="md-3-line" ng-repeat="item in songs" ng-click="null">
                         <ng-md-icon size="36" layout-padding icon="play_circle_fill" ></ng-md-icon>
                         <div class="md-list-item-text" layout="column">
-                          <h3 class="md-title">{{ item.name }}</h3>
-                          <h4>{{ item.artist }}</h4>
+                          <h3 class="md-headline">{{ item.name }}</h3>
+                          <p>{{ item.artist }}</p>
                           <p class="md-secondary">{{ item.time }}</p>
                         </div>
                       </md-list-item>
